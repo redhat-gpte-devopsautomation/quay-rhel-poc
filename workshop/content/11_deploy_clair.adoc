@@ -55,7 +55,7 @@ $ sudo podman run --rm -it --name quay_config \
 |===
 
 . Kill the quay config container which was running in configuration mode
-. Edit the config.yaml file as below
+. Edit the config.yaml to include the contents as below, ensure to use the correct PSK value:
 +
 [source,sh]
 ----
@@ -131,6 +131,7 @@ sudo podman run -d --rm -p 80:8080 -p 443:8443  \
    registry.redhat.io/quay/quay-rhel8:v3.7.8
 ----
 . Using Clair security
+.. Login to your Red Hat Quay registry
 +
 [source,sh]
 ----
@@ -139,7 +140,7 @@ Username: quayadmin
 Password:
 Login Succeeded!
 ----
-Pull, tag and push sample image
+.. Pull, tag and push sample image
 +
 [source,sh]
 ----

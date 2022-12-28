@@ -31,7 +31,7 @@ $ sudo podman run -d --name mirroring-worker   -v $QUAY/config:/conf/stack:Z   -
 ----
 $ sudo podman run -d --rm -p 80:8080 -p 443:8443 --name=quay -v $QUAY/config:/conf/stack:Z -v $QUAY/storage:/datastorage:Z registry.redhat.io/quay/quay-rhel8:v3.7.8
 ----
-. In the ui create a new repo 
+. Create a new repo in the Red Hat Quay user interface.
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -47,8 +47,10 @@ $ sudo podman run -d --rm -p 80:8080 -p 443:8443 --name=quay -v $QUAY/config:/co
 |===
 . In the Mirror tab, enter the details for connecting to the external registry, along with the tags, scheduling and access information
 
-* Registry Location: The external repository you want to mirror, for example, registry.redhat.io/quay/quay-rhel8
-* Tags: v3.7.8,v3.7.? This field is required. You may enter a comma-separated list of individual tags or tag patterns. (See Tag Patterns section for details.)
+* Registry Location: The external repository you want to mirror, for example, *registry.redhat.io/quay/quay-rhel8*
+* Tags: *v3.7.8,v3.7.?* 
++
+This field is required. You may enter a comma-separated list of individual tags or tag patterns. (See Tag Patterns section for details.)
 +
 [NOTE]
 ====

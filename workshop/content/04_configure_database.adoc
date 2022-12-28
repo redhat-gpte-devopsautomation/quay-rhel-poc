@@ -2,7 +2,7 @@
 
 The database is used by Red Hat Quay as its primary metadata storage. Note that this is not for image storage. We will use a postgres database for Red Hat Quay.
 
-. Denoted here by the variable $QUAY, create a directory for the database data and set the permissions appropriately:
+. Denoted here by the variable `$QUAY`, create a directory for the database data and set the permissions appropriately:
 +
 [source,sh]
 ----
@@ -25,7 +25,7 @@ $ sudo podman run -d --rm --name postgresql-quay \
   registry.redhat.io/rhel8/postgresql-10:1
 ----
 
-. Ensure that the Postgres pg_trgm module is installed, as it is required by Quay:
+. Ensure that the Postgres `pg_trgm` module is installed, as it is required by Quay:
 +
 [source,sh]
 ----

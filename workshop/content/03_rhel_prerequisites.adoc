@@ -17,7 +17,7 @@ ssh cloud-user@quay-server.<guid>.dynamic.opentlc.com
 sudo yum module install -y container-tools
 ----
 
-. Authenticate to registry.redhat.io so that you can pull container images
+. Authenticate to registry.redhat.io using your own credentials so that you can pull container images
 +
 [source,sh]
 ----

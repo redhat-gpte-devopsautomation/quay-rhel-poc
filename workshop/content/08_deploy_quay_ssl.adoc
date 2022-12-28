@@ -4,8 +4,8 @@
 
 . Create a Certificate Authority
 +
-Do the below on your laptop
-+
+*Do the below on your laptop*
+
 .. Generate the root CA key:
 +
 [source,sh]
@@ -71,7 +71,7 @@ A challenge password []:
 An optional company name []:
 ----
 
-. Create a configuration file openssl.cnf, specifying the server hostname, for example:
+. Create a configuration file openssl.cnf, specifying the server hostname and the respective IP address, for example:
 +
 openssl.cnf
 +
@@ -89,6 +89,7 @@ subjectAltName = @alt_names
 DNS.1 = quay-server.example.com
 IP.1 = 52.118.31.6
 ----
+*Make sure to change the IP address to your public IP address that you received in your email after provisioning the lab environment.*
 
 . Use the configuration file to generate the certificate ssl.cert:
 +
@@ -97,7 +98,7 @@ IP.1 = 52.118.31.6
 $ openssl x509 -req -in ssl.csr -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -out ssl.cert -days 356 -extensions v3_req -extfile openssl.cnf
 ----
 
-. After completion, you will have the below files on your local directory on your laptop
+. After completion, you will have the below files on your laptop
 +
 [source,sh]
 ----
@@ -160,6 +161,7 @@ Rename and copy it to your VM’s quay config path
 [source,sh]
 ----
 [nroy@nealwork quay]$ mv ~/Downloads/quay-config\ \(1\).tar.gz ~/Downloads/quay-config-ssl.tar.gz
+
 [nroy@nealwork quay]$ scp /home/nroy/Downloads/quay-config-ssl.tar.gz  cloud-user@<vmhostname>:/tmp/
 ----
 
@@ -172,13 +174,20 @@ Rename and copy it to your VM’s quay config path
 [source,sh]
 ----
 $ sudo rm -rf $QUAY/config/*
-Copy the new config file
+----
+
+. Copy the new config file and extract it
++
+[source,sh]
+----
 $ sudo cp /tmp/quay-config-ssl.tar.gz .
+
 $ sudo tar xvf quay-config-ssl.tar.gz 
 extra_ca_certs/
 config.yaml
 ssl.cert
 ssl.key
+
 $ sudo rm -f quay-config-ssl.tar.gz 
 ----
 
@@ -211,7 +220,7 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 ^| Figure 8.4 - Login screen
 |===
 
-. Now you can login with quayadmin and password 
+. Now you can login with `quayadmin` and `password` 
 
 === Testing SSL configuration using the command line
 . Use the podman login command to attempt to log in to the Quay registry with SSL enabled:

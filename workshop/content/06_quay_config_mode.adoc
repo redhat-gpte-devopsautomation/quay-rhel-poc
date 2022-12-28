@@ -2,14 +2,14 @@
 
 Before running the Red Hat Quay service, you need to generate a configuration file that has details of all the components, including registry settings, and database and Redis connection parameters. 
 
-. To generate a configuration file, run the Quay container in config mode, specifying a password, for example, the string secret.
+. To generate a configuration file, run the Quay container in config mode, specifying a password, for example, the string `secret`.
 +
 [source,sh]
 ----
 $ sudo podman run --rm -it --name quay_config -p 80:8080 -p 443:8443 registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
 ----
 
-. Use your laptop’s browser to access the user interface for the configuration tool at http://quay-server.example.com. Make sure you add the below entry in your `/etc/hosts` file
+. Make sure you add the entry for `quay-server.example.com` in your `/etc/hosts` file. 
 +
 [source,sh]
 ----
@@ -18,7 +18,9 @@ $ sudo podman run --rm -it --name quay_config -p 80:8080 -p 443:8443 registry.re
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 52.118.31.6 quay-server.example.com
 ----
-Where `52.118.31.6` is the public IP of the VM which was provisioned, for you this IP will be different.
+Where `52.118.31.6` is the public IP of the VM which was provisioned, *for you this IP will be different*. You have received your public IP in the separate email when you provisioned your lab environment. Use the same IP here.
+
+. Use your laptop’s browser to access the user interface for the configuration tool at http://quay-server.example.com
 
 . Log in with the username quayconfig and password secret, or whatever values were specified in the podman run command above.
 +
@@ -58,4 +60,5 @@ Where `52.118.31.6` is the public IP of the VM which was provisioned, for you th
 |===
 
 === Stop the Quay container
-. Stop the Quay container that is running the configuration editor. You can use ctrl+c if your container is running in the foreground, it takes around 30 secs to terminate it.
+* Stop the Quay container that is running the configuration editor. 
+* You can use ctrl+c if your container is running in the foreground, it takes around 30 secs to terminate it.

@@ -52,10 +52,10 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 === Creating a globally visible user message
 
 . Using the Superuser Admin Panel, you can create Normal, Warning, or Error messages for your organization.
-. Click your user name in the top right-hand corner of the UI. Select Super User Admin Panel.
-. On the Red Hat Quay Management page, click Globally visible user messages on the left hand pane.
-. Click Create Message to show a drop-down menu containing Normal, Warning, and Error message types:
-. Enter a message by selecting Click to set message, then click Create Message.
+. Click your user name in the top right-hand corner of the UI. Select `Super User Admin Panel`.
+. On the Red Hat Quay Management page, click `Globally visible user messages` on the left hand pane.
+. Click `Create Message` to show a drop-down menu containing Normal, Warning, and Error message types
+. Enter a message by selecting `Click to set message`, then click `Create Message`.
 +
 [cols="1a",grid=none,width=80%]
 |===

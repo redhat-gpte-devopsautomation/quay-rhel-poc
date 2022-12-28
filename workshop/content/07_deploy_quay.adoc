@@ -2,14 +2,14 @@
 
 . The config which has been downloaded is in your laptop, will be used in the deployment. You need to copy it to your virtual machine.
 +
-On your laptop:
+*Run the below commands on your laptop:*
 +
 [source,sh]
 ----
 $ scp ~/Downloads/quay-config.tar.gz cloud-user@hostname:/tmp$QUAY/config
 ----
 +
-On your VM:
+*Run the below commands on your virtual machine:*
 +
 [source,sh]
 ----
@@ -72,7 +72,7 @@ f1a9ea3e04ec  registry.redhat.io/quay/quay-rhel8:v3.7.8  registry        8 secon
 ^| Figure 7.2 - Create admin user
 |===
 
-. Test login from command line (you can do this from the VM or the laptop provided podman is installed)
+. Test login from command line. You may try this from inside your Quay VM or from your laptop, provided podman is installed.
 +
 [source,sh]
 ----
@@ -84,7 +84,7 @@ Login Succeeded!
 
 === Push/Pull image to test working
 
-. To test pushing and pulling images from the Red Hat Quay registry, first pull a sample image from an external registry:
+. Pull a sample image from an external registry:
 +
 [source,sh]
 ----
@@ -113,7 +113,7 @@ docker.io/library/busybox           latest   22667f53682a   14 hours ago    1.45
 ----
 $ sudo podman tag docker.io/library/busybox quay-server.example.com/quayadmin/busybox:test
 ----
-. Next, push the image to the Red Hat Quay registry. Following this step, you can use your browser to see the tagged image in your repository.
+. Next, push the image to your newly deployed Red Hat Quay registry. Following this step, you can use your browser to see the tagged image in your repository.
 +
 [source,sh]
 ----

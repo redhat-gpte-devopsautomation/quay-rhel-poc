@@ -1,0 +1,87 @@
+== Repository Mirroring
+This feature lets you mirror images from external container registries into your Red Hat Quay cluster.
+
+. Stop the quay registry container
++
+[source,sh]
+----
+$ sudo podman rm -f quay
+----
+. Edit config file, change the below from false to true
++
+[source,sh]
+----
+FEATURE_REPO_MIRROR: true 
+----
+. Earlier in this training you had copied over the rootCA.pem file to the VM on which quay is running. Do the following:
++
+[source,sh]
+----
+$ sudo cp /tmp/rootCA.pem /root/ca.crt
+----
+. Run the repomirror container
++
+[source,sh]
+----
+$ sudo podman run -d --name mirroring-worker   -v $QUAY/config:/conf/stack:Z   -v /root/ca.crt:/etc/pki/ca-trust/source/anchors/ca.crt:Z   registry.redhat.io/quay/quay-rhel8:v3.7.8 repomirror
+----
+. Start the quay registry
++
+[source,sh]
+----
+$ sudo podman run -d --rm -p 80:8080 -p 443:8443 --name=quay -v $QUAY/config:/conf/stack:Z -v $QUAY/storage:/datastorage:Z registry.redhat.io/quay/quay-rhel8:v3.7.8
+----
+. In the ui create a new repo 
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/repomirrornewrepo.png[]
+^| Figure 10.1 - Create a new repo
+|===
+. In the Settings tab, set the Repository State to Mirror:
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/repomirrorsettingstab.png[]
+^| Figure 10.2 - Set repository state to mirror in settings tab
+|===
+. In the Mirror tab, enter the details for connecting to the external registry, along with the tags, scheduling and access information
+
+* Registry Location: The external repository you want to mirror, for example, registry.redhat.io/quay/quay-rhel8
+* Tags: v3.7.8,v3.7.? This field is required. You may enter a comma-separated list of individual tags or tag patterns. (See Tag Patterns section for details.)
++
+[NOTE]
+====
+In order for Quay to get the list of tags in the remote repository, one of the following requirements must be met:
+
+An image with the "latest" tag must exist in the remote repository OR
+At least one explicit tag, without pattern matching, must exist in the list of tags that you specify
+====
+
+* Start Date: The date on which mirroring begins. The current date and time is used by default.
+* Sync Interval: Defaults to syncing every 24 hours. You can change that based on hours or days.
+* Robot User: Create a new robot account or choose an existing robot account to do the mirroring.
+* Username: The username for accessing the external registry holding the repository you are mirroring.
+* Password: The password associated with the Username. Note that the password cannot include characters that require an escape character (\).
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/repomirrormirrortab.png[]
+^| Figure 10.3 - Settings required for mirroring
+|===
+
+. Synchronize now To perform an immediate mirroring operation, press the Sync Now button on the repository’s Mirroring tab. The logs are available on the Usage Logs tab:
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/repomirrorsyncsuccess.png[]
+^| Figure 10.4 - Mirroring in progress
+|===
+
+. When the mirroring is complete, the images will appear in the Tags tab. For this to show, refresh the webpage from the browser
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/repomirrorimages.png[]
+^| Figure 10.5 - Mirrored images appear in Tags tab
+|===

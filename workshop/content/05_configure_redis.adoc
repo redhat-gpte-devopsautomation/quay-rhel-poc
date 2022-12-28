@@ -1,0 +1,23 @@
+== Configure Redis
+
+Stores live builder logs and the Red Hat Quay tutorial. It is a key-value store.
+
+. Run the Redis container
++
+[source,sh]
+----
+$ sudo podman run -d --rm --name redis \
+  -p 6379:6379 \
+  -e REDIS_PASSWORD=strongpassword \
+  registry.redhat.io/rhel8/redis-5:1
+----
+
+. Verify that both the postgres and redis containers are running
++
+[source,sh]
+----
+[cloud-user@quay-server ~]$ sudo podman ps
+CONTAINER ID  IMAGE                                     COMMAND         CREATED         STATUS             PORTS                   NAMES
+b34579e58258  registry.redhat.io/rhel8/postgresql-10:1  run-postgresql  36 seconds ago  Up 36 seconds ago  0.0.0.0:5432->5432/tcp  postgresql-quay
+dcafbb135e0d  registry.redhat.io/rhel8/redis-5:1        run-redis       9 seconds ago   Up 9 seconds ago   0.0.0.0:6379->6379/tcp  redis
+----

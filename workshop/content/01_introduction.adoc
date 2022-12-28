@@ -1,0 +1,32 @@
+
+== Introduction
+
+Red Hat Quay is an enterprise-quality registry for building, securing and serving container images. 
+It provides secure storage, distribution, and governance of containers and cloud-native artifacts on any infrastructure.
+
+This lab describes how to deploy Red Hat Quay for proof-of-concept (non-production) purposes. 
+
+
+== Overview
+
+In this hands on lab you will:
+
+* Configure the RHEL server with prerequisites
+* Configure the postgres database
+* Configuring Redis
+* Setup the required configuration
+* Deploy Red Hat Quay
+* Deploy Red Hat Quay with SSL certificates
+* Setup Quay Superuser
+* Setup repository mirroring
+* Deploy and run Clairv4
+
+== Architecture
+
+Below are the core components of Red Hat Quay
+
+* Quay(container registry): Runs the Quay container as a service, consisting of several components in the pod.
+* Clair: Scans container images for vulnerabilities and suggests fixes.
+* Database: Used by Red Hat Quay as its primary metadata storage. Note that this is not for image storage.
+* Redis (key-value store): Stores live builder logs and the Red Hat Quay tutorial.
+* Storage: could be public/private cloud storage. For this lab (poc) we will use local storage

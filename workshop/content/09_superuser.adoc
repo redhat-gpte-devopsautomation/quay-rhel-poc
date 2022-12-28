@@ -1,0 +1,65 @@
+== Red Hat Quay Superuser
+A superuser is a Quay user account that has extended privileges, including the ability to:
+
+    * Manage users
+    * Manage organizations
+    * Manage service keys
+    * View the change log
+    * Query the usage logs
+    * Create globally visible user messages
+
+=== Add the superuser
+. To add super user, stop the quay registry container
++
+[source,sh]
+----
+$ sudo podman rm -f quay
+----
+
+. Edit the config.yaml file with the below
++
+[source,sh]
+----
+$ cd $QUAY/config
+$ vim config.yaml (add the superusers array only)
+SERVER_HOSTNAME: quay-server.example.com
+SETUP_COMPLETE: true
+SUPER_USERS:
+  - quayadmin
+----
+
+. Restart the Quay registry:
++
+[source,sh]
+----
+$ sudo podman rm -f quay
+$ sudo podman run -d --rm -p 80:8080 -p 443:8443 \
+--name=quay \
+-v $QUAY/config:/conf/stack:Z \
+-v $QUAY/storage:/datastorage:Z \
+registry.redhat.io/quay/quay-rhel8:v3.7.8
+----
+
+. Access the Super User Admin Panel by clicking on the current user’s name or avatar in the top right-hand corner of the UI. If the user has been added as a superuser, an extra item is presented in the drop-down list called Super User Admin Panel.
+
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/superuser.png[]
+^| Figure 9.1 - Superuser admin panel
+|===
+
+=== Creating a globally visible user message
+
+. Using the Superuser Admin Panel, you can create Normal, Warning, or Error messages for your organization.
+. Click your user name in the top right-hand corner of the UI. Select Super User Admin Panel.
+. On the Red Hat Quay Management page, click Globally visible user messages on the left hand pane.
+. Click Create Message to show a drop-down menu containing Normal, Warning, and Error message types:
+. Enter a message by selecting Click to set message, then click Create Message.
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/superusertestmessage.png[]
+^| Figure 9.2 - Creating a global message
+|===
+. Messages can be deleted by clicking Options and then Delete Message.

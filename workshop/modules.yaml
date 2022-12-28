@@ -1,0 +1,35 @@
+---
+modules:
+  01_introduction:
+    name: Deploy Red Hat Quay on RHEL
+    exit_sign: Provision Lab Environment
+  02_order_lab:
+    name: Provision Lab Environment
+    exit_sign: Prerequisites
+  03_rhel_prerequisites:
+    name: Prerequisites
+    exit_sign: Configure Database
+  04_configure_database:
+    name: Configure Database
+    exit_sign: Configure Redis
+  05_configure_redis:
+    name: Configure Redis
+    exit_sign: Quay config mode
+  06_quay_config_mode:
+    name: Quay config mode
+    exit_sign: Deploy Quay
+  07_deploy_quay:
+    name: Deploy Quay
+    exit_sign: Deploy Quay with SSL
+  08_deploy_quay_ssl:
+    name: Deploy Quay with SSL
+    exit_sign: Quay Superuser
+  09_superuser:
+    name: Quay Superuser
+    exit_sign: Repository mirroring
+  10_repo_mirroring:
+    name: Repository mirroring
+    exit_sign: Deploy Clair
+  11_deploy_clair:
+    name: Deploy Clair
+    

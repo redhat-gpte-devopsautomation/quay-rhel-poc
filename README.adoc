@@ -1,0 +1,23 @@
+:markup-in-source: verbatim,attributes,quotes
+
+= Deploy Red Hat Quay on RHEL for proof of concept
+
+NOTE: This project is based on OpenShift Homeroom: https://github.com/openshift-homeroom.
+This repository is based on https://github.com/openshift-homeroom/lab-asciidoc-sample.
+If you are using OpenShift Homeroom project already, please continue using it.
+If you want to integrate it with AgnosticD and Babylon, follow the instructions in 
+<<For the existing Homeroom users>>
+
+== Overview
+
+In this hands on lab you will:
+
+* Configure the RHEL server with prerequisites
+* Configure the postgres database
+* Configuring Redis
+* Setup Red Hat Quay configuration
+* Deploy Red Hat Quay
+* Deploy Red Hat Quay with SSL certificates
+* Setup Quay Superuser
+* Setup repository mirroring
+* Deploy and run Clairv4

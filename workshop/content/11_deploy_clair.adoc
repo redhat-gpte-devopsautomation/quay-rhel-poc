@@ -1,0 +1,164 @@
+== Deploy Clair V4
+
+Clair is an application for parsing image contents and reporting vulnerabilities affecting the contents. This is performed via static analysis and not at runtime.
+
+
+. Deploy database for clair
+* Create local directory for clair database
++
+[source,sh]
+----
+$ sudo mkdir -p $QUAY/postgres-clairv4
+$ sudo setfacl -m u:26:-wx $QUAY/postgres-clairv4
+----
+* Run the database
++
+[source,sh]
+----
+$ sudo podman run -d --rm --name postgresql-clairv4 \
+  -e POSTGRESQL_USER=clairuser \
+  -e POSTGRESQL_PASSWORD=clairpass \
+  -e POSTGRESQL_DATABASE=clair \
+  -e POSTGRESQL_ADMIN_PASSWORD=adminpass \
+  -p 5433:5432 \
+  -v $QUAY/postgres-clairv4:/var/lib/pgsql/data:Z \
+  registry.redhat.io/rhel8/postgresql-10:1
+----
+
+* Ensure required module is installed
++
+[source,sh]
+----
+$ sudo podman exec -it postgresql-clairv4 /bin/bash -c 'echo "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\"" | psql -d clair -U postgres'
+----
+
+. Quay configuration
+* Stop the quay container if already running and run it in config mode
++
+[source,sh]
+----
+$ sudo podman run --rm -it --name quay_config \
+  -p 80:8080 -p 443:8443 \
+  -v $QUAY/config:/conf/stack:Z \
+  registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
+----
+* Enter the Security Scanner Endpoint and generate a PSK: 
+** Security Scanner Endpoint: http://quay-server.example.com:8081
+** Security Scanner PSK: Z2k4NzNkMGg5YzloZg== (for e.g. your value will be different)
+
+* Validate and copy the PSK
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/clairsetupui.png[]
+^| Figure 11.1 - Validate the generated PSK and
+|===
+
+. Kill the quay config container which was running in configuration mode
+. Edit the config.yaml file as below
++
+[source,sh]
+----
+FEATURE_SECURITY_NOTIFICATIONS: false
+FEATURE_SECURITY_SCANNER: true
+----
++
+[source,sh]
+----
+SECURITY_SCANNER_INDEXING_INTERVAL: 30
+SECURITY_SCANNER_V4_ENDPOINT: http://quay-server.example.com:8081
+SECURITY_SCANNER_V4_PSK: Z2k4NzNkMGg5YzloZg==
+SERVER_HOSTNAME: quay-server.example.com
+----
+
+=== Clair configuration 
+
+. Create a config file for clair
++
+[source,sh]
+----
+$ sudo mkdir -p /etc/clairv4/config
+$ sudo vi /etc/clairv4/config/config.yaml
+http_listen_addr: :8081
+introspection_addr: :8089
+log_level: debug
+indexer:
+  connstring: host=quay-server.example.com port=5433 dbname=clair user=clairuser password=clairpass sslmode=disable
+  scanlock_retry: 10
+  layer_scan_concurrency: 5
+  migrations: true
+matcher:
+  connstring: host=quay-server.example.com port=5433 dbname=clair user=clairuser password=clairpass sslmode=disable
+  max_conn_pool: 100
+  run: ""
+  migrations: true
+  indexer_addr: clair-indexer
+notifier:
+  connstring: host=quay-server.example.com port=5433 dbname=clair user=clairuser password=clairpass sslmode=disable
+  delivery_interval: 1m
+  poll_interval: 5m
+  migrations: true
+auth:
+  psk:
+    key: "Z2k4NzNkMGg5YzloZg=="
+    iss: ["quay"]
+# tracing and metrics
+trace:
+  name: "jaeger"
+  probability: 1
+  jaeger:
+    agent_endpoint: "localhost:6831"
+    service_name: "clair"
+metrics:
+  name: "prometheus"
+----
+
+. Run Clair
++
+[source,sh]
+----
+$ sudo podman run -d --rm --name clairv4   -p 8081:8081 -p 8089:8089   -e CLAIR_CONF=/clair/config.yaml -e CLAIR_MODE=combo   -v /etc/clairv4/config:/clair:Z   -v /root/ca.crt:/etc/pki/tls/certs/quay-ca.crt:Z registry.redhat.io/quay/clair-rhel8:v3.7.8
+----
+
+. Run Quay
++
+[source,sh]
+----
+sudo podman run -d --rm -p 80:8080 -p 443:8443  \
+   --name=quay \
+   -v $QUAY/config:/conf/stack:Z \
+   -v $QUAY/storage:/datastorage:Z \
+   registry.redhat.io/quay/quay-rhel8:v3.7.8
+----
+. Using Clair security
++
+[source,sh]
+----
+$ sudo podman login --tls-verify=false quay-server.example.com
+Username: quayadmin
+Password:
+Login Succeeded!
+----
+Pull, tag and push sample image
++
+[source,sh]
+----
+$ sudo podman pull ubuntu:20.04
+$ sudo podman tag docker.io/library/ubuntu:20.04 quay-server.example.com/quayadmin/ubuntu:20.04
+$ sudo podman push --tls-verify=false quay-server.example.com/quayadmin/ubuntu:20.04
+----
+. Scanning results as seen in UI, notice the security scan column. It takes some time for this column to show data
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/clairscan2.png[]
+^| Figure 11.2 - Security Scan column shows vulnerabilities
+|===
+
+. On selecting colored option("6 medium" in our case), you see the detailed view of the vulnerabilities of the image
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/clairscan1.png[]
+^| Figure 11.3 - Detailed view of vulnerabilities
+|===

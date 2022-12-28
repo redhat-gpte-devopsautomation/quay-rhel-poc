@@ -1,13 +1,16 @@
 ---
-name: OpenShift UPI Offline AWS
+name: Deploy Red Hat Quay on RHEL
 modules:
   activate:
-    -  01_goals
-    -  02_provision_lab    
-    -  03_overview
-    -  04_restricted_network
-    -  05_environment_overview
-    -  06_prepare_environment
-    -  07_openshift_installation
-    -  08_appendicies
+    -  01_introduction
+    -  02_order_lab    
+    -  03_rhel_prerequisites
+    -  04_configure_database
+    -  05_configure_redis
+    -  06_quay_config_mode
+    -  07_deploy_quay
+    -  08_deploy_quay_ssl
+    -  09_superuser
+    -  10_repo_mirroring
+    -  11_deploy_clair
     

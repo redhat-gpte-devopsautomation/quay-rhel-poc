@@ -55,7 +55,7 @@ Where `52.118.31.6` is the public IP of the VM which was provisioned, *for you t
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/httpvalidate.png[]
+^| image::images/httpvalidate.png[link="images/httpvalidate.png"]
 ^| Figure 6.2 - Validate Quay configuration
 |===
 

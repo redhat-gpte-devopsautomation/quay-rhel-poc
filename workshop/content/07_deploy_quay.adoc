@@ -6,7 +6,7 @@
 +
 [source,sh]
 ----
-$ scp ~/Downloads/quay-config.tar.gz cloud-user@hostname:/tmp$QUAY/config
+$ scp ~/Downloads/quay-config.tar.gz cloud-user@hostname:/tmp
 ----
 +
 *Run the below commands on your virtual machine:*

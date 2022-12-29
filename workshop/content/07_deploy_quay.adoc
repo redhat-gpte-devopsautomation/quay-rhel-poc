@@ -69,7 +69,7 @@ f1a9ea3e04ec  registry.redhat.io/quay/quay-rhel8:v3.7.8  registry        8 secon
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/httpquaycreateuser.png[link=httpquaycreateuser.png,window=_blank]
+^| image::images/httpquaycreateuser.png[link=images/httpquaycreateuser.png,window=_blank]
 ^| Figure 7.2 - Create admin user
 ^| [small]#Click on image to view large size#
 |===

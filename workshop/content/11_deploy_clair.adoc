@@ -45,14 +45,16 @@ $ sudo podman run --rm -it --name quay_config \
 * Enter the Security Scanner Endpoint and generate a PSK: 
 ** Security Scanner Endpoint: http://quay-server.example.com:8081
 ** Security Scanner PSK: Z2k4NzNkMGg5YzloZg== (for e.g. your value will be different)
-
-* Validate and copy the PSK
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/clairsetupui.png[]
-^| Figure 11.1 - Validate the generated PSK and
+^| image::images/clairsetupui.png[link=images/clairsetupui.png,window=_blank]
+^| Figure 11.1 - Generate PSK
+^| [small]#Click on image to view large size#
 |===
+
+* Validate and copy the PSK
+
 
 . Kill the quay config container which was running in configuration mode
 . Edit the config.yaml to include the contents as below, ensure to use the correct PSK value:
@@ -152,14 +154,16 @@ $ sudo podman push --tls-verify=false quay-server.example.com/quayadmin/ubuntu:2
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/clairscan2.png[]
+^| image::images/clairscan2.png[link=images/clairscan2.png,window=_blank]
 ^| Figure 11.2 - Security Scan column shows vulnerabilities
+^| [small]#Click on image to view large size#
 |===
 
 . On selecting colored option("6 medium" in our case), you see the detailed view of the vulnerabilities of the image
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/clairscan1.png[]
+^| image::images/clairscan1.png[link=images/clairscan1.png,window=_blank]
 ^| Figure 11.3 - Detailed view of vulnerabilities
+^| [small]#Click on image to view large size#
 |===

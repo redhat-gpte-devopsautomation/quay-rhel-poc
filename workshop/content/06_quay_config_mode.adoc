@@ -26,8 +26,9 @@ Where `52.118.31.6` is the public IP of the VM which was provisioned, *for you t
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/httpQuaylogin.png[]
+^| image::images/httpQuaylogin.png[link=images/httpQuaylogin.png,window=_blank]
 ^| Figure 6.1 - Quay login page
+^| [small]#Click on image to view large size#
 |===
 
 === Red Hat Quay setup for generating configuration file
@@ -55,8 +56,9 @@ Where `52.118.31.6` is the public IP of the VM which was provisioned, *for you t
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/httpvalidate.png[link="images/httpvalidate.png"]
+^| image::images/httpvalidate.png[link=images/httpvalidate.png,window=_blank]
 ^| Figure 6.2 - Validate Quay configuration
+^| [small]#Click on image to view large size#
 |===
 
 === Stop the Quay container

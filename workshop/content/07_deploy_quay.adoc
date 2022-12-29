@@ -56,8 +56,9 @@ f1a9ea3e04ec  registry.redhat.io/quay/quay-rhel8:v3.7.8  registry        8 secon
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/httpquayloginui.png[]
+^| image::images/httpquayloginui.png[link=images/httpquayloginui.png,window=_blank]
 ^| Figure 7.1 - Red Hat Quay User Interface
+^| [small]#Click on image to view large size#
 |===
 
 . Select Create Account 
@@ -68,8 +69,9 @@ f1a9ea3e04ec  registry.redhat.io/quay/quay-rhel8:v3.7.8  registry        8 secon
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/httpquaycreateuser.png[]
+^| image::images/httpquaycreateuser.png[link=httpquaycreateuser.png,window=_blank]
 ^| Figure 7.2 - Create admin user
+^| [small]#Click on image to view large size#
 |===
 
 . Test login from command line. You may try this from inside your Quay VM or from your laptop, provided podman is installed.

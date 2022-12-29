@@ -45,8 +45,9 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/superuser.png[]
+^| image::images/superuser.png[link=images/superuser.png,window=_blank]
 ^| Figure 9.1 - Superuser admin panel
+^| [small]#Click on image to view large size#
 |===
 
 === Creating a globally visible user message
@@ -59,7 +60,8 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/superusertestmessage.png[]
+^| image::images/superusertestmessage.png[link=images/superusertestmessage.png,window=_blank]
 ^| Figure 9.2 - Creating a global message
+^| [small]#Click on image to view large size#
 |===
 . Messages can be deleted by clicking Options and then Delete Message.

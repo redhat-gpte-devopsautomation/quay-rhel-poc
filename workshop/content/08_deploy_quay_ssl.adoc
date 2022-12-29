@@ -129,8 +129,9 @@ Login with username quayconfig and password secret
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/sslselectcertkey.png[]
+^| image::images/sslselectcertkey.png[link=images/sslselectcertkey.png,window=_blank]
 ^| Figure 8.1 - Selecting the SSL certificate in the config editor
+^| [small]#Click on image to view large size#
 |===
 
 . Enter all the other information as mentioned earlier
@@ -145,8 +146,9 @@ Login with username quayconfig and password secret
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/sslvalidateconf.png[]
+^| image::images/sslvalidateconf.png[link=images/sslvalidateconf.png,window=_blank]
 ^| Figure 8.2 - Validate the config with ssl certificates
+^| [small]#Click on image to view large size#
 |===
 
 . Validate and download the updated configuration.
@@ -208,16 +210,18 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/sslsuccess.png[]
+^| image::images/sslsuccess.png[link=images/sslsuccess.png,window=_blank]
 ^| Figure 8.3 - Successful ssl deployment
+^| [small]#Click on image to view large size#
 |===
 
 . Proceed with the warning and land on the Red Hat Quay login page.
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/sslsuccess1.png[]
+^| image::images/sslsuccess1.png[link=images/sslsuccess1.png,window=_blank]
 ^| Figure 8.4 - Login screen
+^| [small]#Click on image to view large size#
 |===
 
 . Now you can login with `quayadmin` and `password` 

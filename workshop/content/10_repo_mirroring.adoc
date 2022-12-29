@@ -35,15 +35,17 @@ $ sudo podman run -d --rm -p 80:8080 -p 443:8443 --name=quay -v $QUAY/config:/co
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/repomirrornewrepo.png[]
+^| image::images/repomirrornewrepo.png[link=images/repomirrornewrepo.png,window=_blank]
 ^| Figure 10.1 - Create a new repo
+^| [small]#Click on image to view large size#
 |===
 . In the Settings tab, set the Repository State to Mirror:
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/repomirrorsettingstab.png[]
+^| image::images/repomirrorsettingstab.png[link=images/repomirrorsettingstab.png,window=_blank]
 ^| Figure 10.2 - Set repository state to mirror in settings tab
+^| [small]#Click on image to view large size#
 |===
 . In the Mirror tab, enter the details for connecting to the external registry, along with the tags, scheduling and access information
 
@@ -68,22 +70,25 @@ At least one explicit tag, without pattern matching, must exist in the list of t
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/repomirrormirrortab.png[]
+^| image::images/repomirrormirrortab.png[link=images/repomirrormirrortab.png,window=_blank]
 ^| Figure 10.3 - Settings required for mirroring
+^| [small]#Click on image to view large size#
 |===
 
 . Synchronize now To perform an immediate mirroring operation, press the Sync Now button on the repository’s Mirroring tab. The logs are available on the Usage Logs tab:
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/repomirrorsyncsuccess.png[]
+^| image::images/repomirrorsyncsuccess.png[link=images/repomirrorsyncsuccess.png,window=_blank]
 ^| Figure 10.4 - Mirroring in progress
+^| [small]#Click on image to view large size#
 |===
 
 . When the mirroring is complete, the images will appear in the Tags tab. For this to show, refresh the webpage from the browser
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/repomirrorimages.png[]
+^| image::images/repomirrorimages.png[link=images/repomirrorimages.png,window=_blank]
 ^| Figure 10.5 - Mirrored images appear in Tags tab
+^| [small]#Click on image to view large size#
 |===

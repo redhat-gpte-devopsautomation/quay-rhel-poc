@@ -6,23 +6,28 @@ Before running the Red Hat Quay service, you need to generate a configuration fi
 +
 [source,sh]
 ----
-$ sudo podman run --rm -it --name quay_config -p 80:8080 -p 443:8443 registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
+$ sudo podman run --rm -it --name quay_config --net test -p 80:8080 -p 443:8443 registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
 ----
 
-. Make sure you add the entry for `quay-server.example.com` in your `/etc/hosts` file. 
+. Make sure you add the entry for `quay.example.com` in your `/etc/hosts` file of the local machine(your laptop) and also the virtual machine on which you will run quay.
 +
 [source,sh]
 ----
 [nroy@nealwork ~]$ cat /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
-52.118.31.6 quay-server.example.com
+52.118.31.6 quay.example.com
+
+[ec2-user@quay ~]$ cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
+52.118.31.6 quay.example.com
 ----
 Where `52.118.31.6` is the public IP of the VM which was provisioned, *for you this IP will be different*. You have received your public IP in the separate email when you provisioned your lab environment. Use the same IP here.
 
-. Use your laptop’s browser to access the user interface for the configuration tool at http://quay-server.example.com
+. Use your laptop’s browser to access the user interface for the configuration tool at http://quay.example.com . Please note that TLS is possible and that would be covered in the next few exercises in detail.
 
-. Log in with the username quayconfig and password secret, or whatever values were specified in the podman run command above.
+. Log in with the username `quayconfig` and password `secret`, or whatever values were specified in the podman run command above.
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -37,16 +42,16 @@ Where `52.118.31.6` is the public IP of the VM which was provisioned, *for you t
     * Basic configuration
     ** Don’t change, use default values.
     * Server configuration
-    ** enter `quay-server.example.com`
+    ** enter `quay.example.com`
     * Database
     ** For the purpose of this exercise, enter the below
     *** Database Type: `Postgres`
-    *** Database Server: `quay-server.example.com:5432`
+    *** Database Server: `postgresql-quay:5432`
     *** Username: `quayuser`
     *** Password: `quaypass`
     *** Database Name: `quay`
     * Redis
-    ** Redis Hostname: `quay-server.example.com`
+    ** Redis Hostname: `redis`
     ** Redis port: 6379 (default)
     ** Redis password: `strongpassword`
         

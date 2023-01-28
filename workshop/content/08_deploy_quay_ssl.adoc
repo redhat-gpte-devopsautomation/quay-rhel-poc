@@ -27,7 +27,7 @@ State or Province Name (full name) []:KARNATAKA
 Locality Name (eg, city) [Default City]:BANGALORE
 Organization Name (eg, company) [Default Company Ltd]:QUAY
 Organizational Unit Name (eg, section) []:TRAINING
-Common Name (eg, your name or your server's hostname) []:quay-server.example.com
+Common Name (eg, your name or your server's hostname) []:quay.example.com
 Email Address []:
 ----
 +
@@ -62,7 +62,7 @@ State or Province Name (full name) []:KARNATAKA
 Locality Name (eg, city) [Default City]:BANGALORE
 Organization Name (eg, company) [Default Company Ltd]:QUAY
 Organizational Unit Name (eg, section) []:TRAINING
-Common Name (eg, your name or your server's hostname) []:quay-server.example.com
+Common Name (eg, your name or your server's hostname) []:quay.example.com
 Email Address []:
 
 Please enter the following 'extra' attributes
@@ -86,7 +86,7 @@ basicConstraints = CA:FALSE
 keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 subjectAltName = @alt_names
 [alt_names]
-DNS.1 = quay-server.example.com
+DNS.1 = quay.example.com
 IP.1 = 52.118.31.6
 ----
 *Make sure to change the IP address to your public IP address that you received in your email after provisioning the lab environment.*
@@ -109,7 +109,7 @@ openssl.cnf  rootCA.key  rootCA.pem  rootCA.srl  ssl.cert  ssl.csr  ssl.key
 === Configuring SSL using the UI
 This section configures SSL using the Quay UI.
 
-. Stop the Quay container first:
+. Stop and remove the Quay container first:
 +
 [source,sh]
 ----
@@ -120,10 +120,10 @@ $ sudo podman rm -f quay
 +
 [source,sh]
 ----
-$ sudo podman run --rm -it --name quay_config -p 80:8080 -p 443:8443 registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
+$ sudo podman run --rm -it --name quay_config --net test -p 80:8080 -p 443:8443 -v $QUAY/config:/conf/stack:Z registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
 ----
 
-. Visit http://quay-server.example.com
+. Visit http://quay.example.com
 Login with username quayconfig and password secret
 . In the Server Configuration section, select `Red Hat Quay handles TLS` for TLS. Upload the certificate file and private key file created earlier, ensuring that the Server Hostname matches the value used when creating the certs. 
 +
@@ -134,15 +134,7 @@ Login with username quayconfig and password secret
 ^| [small]#Click on image to view large size#
 |===
 
-. Enter all the other information as mentioned earlier
-* Server hostname: quay-server.example.com
-* Database type: postgres
-* Database server: quay-server.example.com
-* Username: quayuser
-* Password: quaypass
-* Database name: quay
-* Redis hostname: quay-server.example.com
-* Redis password: strongpassword
+. Validate and download the updated configuration.
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -151,9 +143,7 @@ Login with username quayconfig and password secret
 ^| [small]#Click on image to view large size#
 |===
 
-. Validate and download the updated configuration.
-
-. Now probably your downloaed file will have the name quay-config (1).tar.gz
+. Now probably your downloaded file will have the name quay-config (1).tar.gz
 Rename and copy it to your VM’s quay config path
 
 *Perform the below steps on your laptop*
@@ -164,7 +154,7 @@ Rename and copy it to your VM’s quay config path
 ----
 [nroy@nealwork quay]$ mv ~/Downloads/quay-config\ \(1\).tar.gz ~/Downloads/quay-config-ssl.tar.gz
 
-[nroy@nealwork quay]$ scp /home/nroy/Downloads/quay-config-ssl.tar.gz  cloud-user@<vmhostname>:/tmp/
+[nroy@nealwork quay]$ scp /home/nroy/Downloads/quay-config-ssl.tar.gz  ec2-user@quay.<guid>.dynamic.opentlc.com:/tmp/
 ----
 
 *Perform the below steps on your VM*
@@ -182,6 +172,8 @@ $ sudo rm -rf $QUAY/config/*
 +
 [source,sh]
 ----
+$ cd $QUAY/config
+
 $ sudo cp /tmp/quay-config-ssl.tar.gz .
 
 $ sudo tar xvf quay-config-ssl.tar.gz 
@@ -197,8 +189,8 @@ $ sudo rm -f quay-config-ssl.tar.gz
 +
 [source,sh]
 ----
-$ sudo podman run -d --rm -p 80:8080 -p 443:8443 \
---name=quay \
+$ sudo podman run -d --stop-timeout=30 -p 80:8080 -p 443:8443 \
+--name=quay --net test\
 -v $QUAY/config:/conf/stack:Z \
 -v $QUAY/storage:/datastorage:Z \
 registry.redhat.io/quay/quay-rhel8:v3.7.8
@@ -206,7 +198,7 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 
 === Testing SSL configuration using browser
 
-. Visit https://quay-server.example.com. Notice the warning as you are using a self signed certificate.
+. Visit https://quay.example.com. Notice the warning as you are using a self signed certificate.
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -231,11 +223,11 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 +
 [source,sh]
 ----
-$ sudo podman login quay-server.example.com
+$ sudo podman login quay.example.com
 Username: quayadmin
 Password:
 
-Error: error authenticating creds for "quay-server.example.com": error pinging docker registry quay-server.example.com: Get "https://quay-server.example.com/v2/": x509: certificate signed by unknown authority
+Error: error authenticating creds for "quay.example.com": error pinging docker registry quay.example.com: Get "https://quay.example.com/v2/": x509: certificate signed by unknown authority
 Podman does not trust self-signed certificates. As a workaround, use the --tls-verify option:
 ----
 
@@ -243,7 +235,7 @@ Podman does not trust self-signed certificates. As a workaround, use the --tls-v
 +
 [source,sh]
 ----
-$ sudo podman login --tls-verify=false quay-server.example.com
+$ sudo podman login --tls-verify=false quay.example.com
 Username: quayadmin
 Password:
 
@@ -259,22 +251,22 @@ Login Succeeded!
 [nroy@nealwork quay]$ ls
 openssl.cnf  rootCA.key  rootCA.pem  rootCA.srl  ssl.cert  ssl.csr  ssl.key
 
-$ scp rootCA.pem cloud-user@<hostname>:/tmp
+$ scp rootCA.pem ec2-user@<hostname>:/tmp
 ----
 +
 *On the VM:*
 +
 [source,sh]
 ----
-$ sudo mkdir -p /etc/containers/certs.d/quay-server.example.com
-$ sudo cp /tmp/rootCA.pem /etc/containers/certs.d/quay-server.example.com/ca.crt
+$ sudo mkdir -p /etc/containers/certs.d/quay.example.com
+$ sudo cp /tmp/rootCA.pem /etc/containers/certs.d/quay.example.com/ca.crt
 ----
 You should no longer need to use the `--tls-verify=false` option when logging in to the registry:
 +
 [source,sh]
 ----
-$ sudo podman logout quay-server.example.com
-$ sudo podman login quay-server.example.com
+$ sudo podman logout quay.example.com
+$ sudo podman login quay.example.com
 Username: quayadmin
 Password:
 Login Succeeded!

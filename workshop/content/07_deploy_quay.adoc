@@ -6,7 +6,7 @@
 +
 [source,sh]
 ----
-$ scp ~/Downloads/quay-config.tar.gz cloud-user@hostname:/tmp
+$ scp ~/Downloads/quay-config.tar.gz ec2-user@quay.<guid>.dynamic.opentlc.com:/tmp
 ----
 +
 *Run the below commands on your virtual machine:*
@@ -32,8 +32,8 @@ $ sudo setfacl -m u:1001:-wx $QUAY/storage
 +
 [source,sh]
 ----
-$ sudo podman run -d --rm -p 80:8080 -p 443:8443  \
-   --name=quay \
+$ sudo podman run -d --stop-timeout=30 -p 80:8080 -p 443:8443  \
+   --name=quay --net test\
    -v $QUAY/config:/conf/stack:Z \
    -v $QUAY/storage:/datastorage:Z \
    registry.redhat.io/quay/quay-rhel8:v3.7.8
@@ -43,7 +43,8 @@ $ sudo podman run -d --rm -p 80:8080 -p 443:8443  \
 +
 [source,sh]
 ----
-[cloud-user@quay-server config]$ sudo podman ps
+[cloud-user@quay config]$ sudo podman ps
+
 CONTAINER ID  IMAGE                                      COMMAND         CREATED         STATUS             PORTS                                        NAMES
 b34579e58258  registry.redhat.io/rhel8/postgresql-10:1   run-postgresql  17 minutes ago  Up 17 minutes ago  0.0.0.0:5432->5432/tcp                       postgresql-quay
 dcafbb135e0d  registry.redhat.io/rhel8/redis-5:1         run-redis       17 minutes ago  Up 17 minutes ago  0.0.0.0:6379->6379/tcp                       redis
@@ -52,7 +53,7 @@ f1a9ea3e04ec  registry.redhat.io/quay/quay-rhel8:v3.7.8  registry        8 secon
 
 === Using Red Hat Quay
 
-. Launch red hat quay from browser - http://quay-server.example.com 
+. Launch red hat quay from browser - http://quay.example.com . It may take upto a minute for the homepage to be available. 
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -78,7 +79,7 @@ f1a9ea3e04ec  registry.redhat.io/quay/quay-rhel8:v3.7.8  registry        8 secon
 +
 [source,sh]
 ----
-$ sudo podman login --tls-verify=false quay-server.example.com
+$ podman login --tls-verify=false quay.example.com
 Username: quayadmin
 Password: password
 Login Succeeded!
@@ -90,7 +91,8 @@ Login Succeeded!
 +
 [source,sh]
 ----
-$ sudo podman pull busybox
+$ podman pull busybox
+
 Trying to pull docker.io/library/busybox...
 Getting image source signatures
 Copying blob 4c892f00285e done
@@ -104,7 +106,8 @@ Storing signatures
 +
 [source,sh]
 ----
-$ sudo podman images
+$ podman images
+
 REPOSITORY                          TAG      IMAGE ID       CREATED         SIZE
 docker.io/library/busybox           latest   22667f53682a   14 hours ago    1.45 MB
 ----
@@ -113,13 +116,14 @@ docker.io/library/busybox           latest   22667f53682a   14 hours ago    1.45
 +
 [source,sh]
 ----
-$ sudo podman tag docker.io/library/busybox quay-server.example.com/quayadmin/busybox:test
+$ podman tag docker.io/library/busybox quay.example.com/quayadmin/busybox:test
 ----
 . Next, push the image to your newly deployed Red Hat Quay registry. Following this step, you can use your browser to see the tagged image in your repository.
 +
 [source,sh]
 ----
-$ sudo podman push --tls-verify=false quay-server.example.com/quayadmin/busybox:test
+$ podman push --tls-verify=false quay.example.com/quayadmin/busybox:test
+
 Getting image source signatures
 Copying blob 6b245f040973 done
 Copying config 22667f5368 done
@@ -130,15 +134,17 @@ Storing signatures
 +
 [source,sh]
 ----
-$ sudo podman rmi quay-server.example.com/quayadmin/busybox:test
-Untagged: quay-server.example.com/quayadmin/busybox:test
+$ podman rmi quay.example.com/quayadmin/busybox:test
+
+Untagged: quay.example.com/quayadmin/busybox:test
 ----
 . Pull the image again, this time from your Red Hat Quay registry:
 +
 [source,sh]
 ----
-$ sudo podman pull --tls-verify=false quay-server.example.com/quayadmin/busybox:test
-Trying to pull quay-server.example.com/quayadmin/busybox:test...
+$ podman pull --tls-verify=false quay.example.com/quayadmin/busybox:test
+
+Trying to pull quay.example.com/quayadmin/busybox:test...
 Getting image source signatures
 Copying blob 6ef22a7134ba [--------------------------------------] 0.0b / 0.0b
 Copying config 22667f5368 done

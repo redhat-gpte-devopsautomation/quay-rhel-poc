@@ -1,6 +1,6 @@
 == Deploy Clair V4
 
-Clair is an application for parsing image contents and reporting vulnerabilities affecting the contents. This is performed via static analysis and not at runtime.
+Clair is an application for parsing image contents and reporting vulnerabilities affecting the contents. This is performed via static analysis and not at runtime. Clair is used to index image contents and the contents are matched against known CVEs. The results are then relayed to Quay.
 
 
 . Deploy database for clair
@@ -15,7 +15,7 @@ $ sudo setfacl -m u:26:-wx $QUAY/postgres-clairv4
 +
 [source,sh]
 ----
-$ sudo podman run -d --rm --name postgresql-clairv4 \
+$ sudo podman run -d --name postgresql-clairv4 --net test\
   -e POSTGRESQL_USER=clairuser \
   -e POSTGRESQL_PASSWORD=clairpass \
   -e POSTGRESQL_DATABASE=clair \
@@ -37,45 +37,82 @@ $ sudo podman exec -it postgresql-clairv4 /bin/bash -c 'echo "CREATE EXTENSION I
 +
 [source,sh]
 ----
-$ sudo podman run --rm -it --name quay_config \
+$ sudo podman stop quay
+$ sudo podman run --rm -it --name quay_config --net test\
   -p 80:8080 -p 443:8443 \
   -v $QUAY/config:/conf/stack:Z \
   registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
 ----
-* Enter the Security Scanner Endpoint and generate a PSK: 
-** Security Scanner Endpoint: http://quay-server.example.com:8081
-** Security Scanner PSK: Z2k4NzNkMGg5YzloZg== (for e.g. your value will be different)
+* Go to the Security Scanner section and tick the checkbox that says `Enable Security Scanning`
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/clairsetupui.png[link=images/clairsetupui.png,window=_blank]
-^| Figure 11.1 - Generate PSK
+^| image::images/before-generatepsk.png[link=images/before-generatepsk.png,window=_blank]
+^| Figure 11.1 - Enable security scanning
+^| [small]#Click on image to view large size#
+|===
+* Enter the Security Scanner Endpoint and generate a PSK: 
+** Update the Security Scanner Endpoint to http://clairv4:8081
+** Click on `Generate PSK` button. Copy the PSK, you'll re-use it later.
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/clairsetupui1.png[link=images/clairsetupui1.png,window=_blank]
+^| Figure 11.2 - Generate PSK
 ^| [small]#Click on image to view large size#
 |===
 
-* Validate and copy the PSK
+NOTE:  The PSK is a randomly generated base64 converted shared secret to prevent unauthenticated calls against the clair API
 
+* Validate the settings and download the configuration.
+
+. Copy this config to the Quay VM to use the updated config with the Clair settings
+
+*Perform the below steps on your laptop*
+
+. Copy the config file to the Quay machine
++
+[source,sh]
+----
+[nroy@nealwork quay]$ mv ~/Downloads/quay-config\ \(1\).tar.gz ~/Downloads/quay-config-clair.tar.gz
+
+[nroy@nealwork quay]$ scp /home/nroy/Downloads/quay-config-clair.tar.gz  ec2-user@quay.<guid>.dynamic.opentlc.com:/tmp/
+----
+
+*Perform the below steps on your VM*
+
+. Stop the Quay container which was running in config mode(ctrl+c)
+
+. Remove the existing config files
++
+[source,sh]
+----
+$ sudo rm -rf $QUAY/config/*
+----
+
+. Copy the new config file and extract it
++
+[source,sh]
+----
+$ cd $QUAY/config
+
+$ sudo cp /tmp/quay-config-clair.tar.gz .
+
+$ sudo tar xvf quay-config-ssl.tar.gz 
+extra_ca_certs/
+config.yaml
+ssl.cert
+ssl.key
+
+$ sudo rm -f quay-config-ssl.tar.gz 
+----
 
 . Kill the quay config container which was running in configuration mode
-. Edit the config.yaml to include the contents as below, ensure to use the correct PSK value:
-+
-[source,sh]
-----
-FEATURE_SECURITY_NOTIFICATIONS: false
-FEATURE_SECURITY_SCANNER: true
-----
-+
-[source,sh]
-----
-SECURITY_SCANNER_INDEXING_INTERVAL: 30
-SECURITY_SCANNER_V4_ENDPOINT: http://quay-server.example.com:8081
-SECURITY_SCANNER_V4_PSK: Z2k4NzNkMGg5YzloZg==
-SERVER_HOSTNAME: quay-server.example.com
-----
+
 
 === Clair configuration 
 
-. Create a config file for clair
+. Create a config file for clair. Make sure you update the key field under psk to match what you generated in the UI.
 +
 [source,sh]
 ----
@@ -83,26 +120,26 @@ $ sudo mkdir -p /etc/clairv4/config
 $ sudo vi /etc/clairv4/config/config.yaml
 http_listen_addr: :8081
 introspection_addr: :8089
-log_level: debug
+log_level: info
 indexer:
-  connstring: host=quay-server.example.com port=5433 dbname=clair user=clairuser password=clairpass sslmode=disable
+  connstring: host=postgresql-clairv4 port=5432 dbname=clair user=clairuser password=clairpass sslmode=disable
   scanlock_retry: 10
   layer_scan_concurrency: 5
   migrations: true
 matcher:
-  connstring: host=quay-server.example.com port=5433 dbname=clair user=clairuser password=clairpass sslmode=disable
+  connstring: host=postgresql-clairv4 port=5432 dbname=clair user=clairuser password=clairpass sslmode=disable
   max_conn_pool: 100
   run: ""
   migrations: true
   indexer_addr: clair-indexer
 notifier:
-  connstring: host=quay-server.example.com port=5433 dbname=clair user=clairuser password=clairpass sslmode=disable
+  connstring: host=postgresql-clairv4 port=5432 dbname=clair user=clairuser password=clairpass sslmode=disable
   delivery_interval: 1m
   poll_interval: 5m
   migrations: true
 auth:
   psk:
-    key: "Z2k4NzNkMGg5YzloZg=="
+    key: "NDZhZjNhaTVkMWc3NA=="
     iss: ["quay"]
 # tracing and metrics
 trace:
@@ -115,29 +152,27 @@ metrics:
   name: "prometheus"
 ----
 
+NOTE: Make sure the value of the `key:` parameter matches the generated PSK value
+
 . Run Clair
 +
 [source,sh]
 ----
-$ sudo podman run -d --rm --name clairv4   -p 8081:8081 -p 8089:8089   -e CLAIR_CONF=/clair/config.yaml -e CLAIR_MODE=combo   -v /etc/clairv4/config:/clair:Z   -v /root/ca.crt:/etc/pki/tls/certs/quay-ca.crt:Z registry.redhat.io/quay/clair-rhel8:v3.7.8
+$ sudo podman run -d --name clairv4 --net test -p 8081:8081 -p 8089:8089   -e CLAIR_CONF=/clair/config.yaml -e CLAIR_MODE=combo   -v /etc/clairv4/config:/clair:Z   -v /root/ca.crt:/etc/pki/tls/certs/quay-ca.crt:Z registry.redhat.io/quay/clair-rhel8:v3.7.8
 ----
 
-. Run Quay
+. Stop the Quay container in config mode(ctrl+c) and run Quay
 +
 [source,sh]
 ----
-sudo podman run -d --rm -p 80:8080 -p 443:8443  \
-   --name=quay \
-   -v $QUAY/config:/conf/stack:Z \
-   -v $QUAY/storage:/datastorage:Z \
-   registry.redhat.io/quay/quay-rhel8:v3.7.8
+sudo podman start quay
 ----
 . Using Clair security
 .. Login to your Red Hat Quay registry
 +
 [source,sh]
 ----
-$ sudo podman login --tls-verify=false quay-server.example.com
+$ podman login quay.example.com
 Username: quayadmin
 Password:
 Login Succeeded!
@@ -146,24 +181,26 @@ Login Succeeded!
 +
 [source,sh]
 ----
-$ sudo podman pull ubuntu:20.04
-$ sudo podman tag docker.io/library/ubuntu:20.04 quay-server.example.com/quayadmin/ubuntu:20.04
-$ sudo podman push --tls-verify=false quay-server.example.com/quayadmin/ubuntu:20.04
+$ podman pull ubuntu:20.04
+$ podman tag docker.io/library/ubuntu:20.04 quay.example.com/quayadmin/ubuntu:20.04
+$ podman push quay.example.com/quayadmin/ubuntu:20.04
 ----
-. Scanning results as seen in UI, notice the security scan column. It takes some time for this column to show data
+. Scanning results as seen in UI, notice the security scan column. It takes upto 15 mins for Clair to download all relevant databases, before the ubuntu-based image will show any vulnerabilities. 
 +
 [cols="1a",grid=none,width=80%]
 |===
 ^| image::images/clairscan2.png[link=images/clairscan2.png,window=_blank]
-^| Figure 11.2 - Security Scan column shows vulnerabilities
+^| Figure 11.3 - Security Scan column shows vulnerabilities
 ^| [small]#Click on image to view large size#
 |===
+
+NOTE: During your wait time, you can tail the clairv4 container logs and wait for "ubuntu-focal-updater" to appear. All the RHEL databases are downloaded first and Ubuntu comes last, this is a one time operation.
 
 . On selecting colored option("6 medium" in our case), you see the detailed view of the vulnerabilities of the image
 +
 [cols="1a",grid=none,width=80%]
 |===
 ^| image::images/clairscan1.png[link=images/clairscan1.png,window=_blank]
-^| Figure 11.3 - Detailed view of vulnerabilities
+^| Figure 11.4 - Detailed view of vulnerabilities
 ^| [small]#Click on image to view large size#
 |===

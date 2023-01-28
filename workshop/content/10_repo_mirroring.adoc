@@ -1,18 +1,19 @@
 == Repository Mirroring
 This feature lets you mirror images from external container registries into your Red Hat Quay cluster.
 
-. Stop the quay registry container
-+
-[source,sh]
-----
-$ sudo podman rm -f quay
-----
 . Edit config file, change the below from false to true
 +
 [source,sh]
 ----
 FEATURE_REPO_MIRROR: true 
 ----
+. Restart the quay registry container
++
+[source,sh]
+----
+$ sudo podman restart quay
+----
+
 . Earlier in this training you had copied over the rootCA.pem file to the VM on which quay is running. Do the following:
 +
 [source,sh]
@@ -23,14 +24,9 @@ $ sudo cp /tmp/rootCA.pem /root/ca.crt
 +
 [source,sh]
 ----
-$ sudo podman run -d --name mirroring-worker   -v $QUAY/config:/conf/stack:Z   -v /root/ca.crt:/etc/pki/ca-trust/source/anchors/ca.crt:Z   registry.redhat.io/quay/quay-rhel8:v3.7.8 repomirror
+$ sudo podman run -d --name mirroring-worker --net test -v $QUAY/config:/conf/stack:Z   -v /root/ca.crt:/etc/pki/ca-trust/source/anchors/ca.crt:Z   registry.redhat.io/quay/quay-rhel8:v3.7.8 repomirror
 ----
-. Start the quay registry
-+
-[source,sh]
-----
-$ sudo podman run -d --rm -p 80:8080 -p 443:8443 --name=quay -v $QUAY/config:/conf/stack:Z -v $QUAY/storage:/datastorage:Z registry.redhat.io/quay/quay-rhel8:v3.7.8
-----
+
 . Create a new repo in the Red Hat Quay user interface.
 +
 [cols="1a",grid=none,width=80%]
@@ -65,7 +61,9 @@ At least one explicit tag, without pattern matching, must exist in the list of t
 * Start Date: The date on which mirroring begins. The current date and time is used by default.
 * Sync Interval: Defaults to syncing every 24 hours. You can change that based on hours or days.
 * Robot User: Create a new robot account or choose an existing robot account to do the mirroring.
-* Username: The username for accessing the external registry holding the repository you are mirroring.
+** To create a robot account click on the dropdown of the `Robot User` field and select `Create robot account`
+** Enter a name for your robot account and select the `Create robot account` button
+* Username: The username for accessing the external registry holding the repository you are mirroring. This will be the same username by which you authenticate against registry.redhat.io (for this example). If you didn't have this you created a username at the beginning of this course by visiting https://access.redhat.com/terms-based-registry/
 * Password: The password associated with the Username. Note that the password cannot include characters that require an escape character (\).
 +
 [cols="1a",grid=none,width=80%]
@@ -75,6 +73,7 @@ At least one explicit tag, without pattern matching, must exist in the list of t
 ^| [small]#Click on image to view large size#
 |===
 
+. Press the return key
 . Synchronize now To perform an immediate mirroring operation, press the Sync Now button on the repository’s Mirroring tab. The logs are available on the Usage Logs tab:
 +
 [cols="1a",grid=none,width=80%]

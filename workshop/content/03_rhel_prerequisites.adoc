@@ -7,14 +7,22 @@ Let's finish off the prerequisites for this lab.
 +
 [source,sh]
 ----
-ssh cloud-user@quay-server.<guid>.dynamic.opentlc.com
+ssh ec2-user@quay.<guid>.dynamic.opentlc.com
 ----
 
 . Install container-tools module
 +
 [source,sh]
 ----
-sudo yum module install -y container-tools
+sudo dnf module install -y container-tools
+sudo dnf install -y podman-plugins
+----
+
+. Install the podman-plugins package
++
+[source,sh]
+----
+sudo dnf install -y podman-plugins
 ----
 
 . Authenticate to registry.redhat.io using your own credentials so that you can pull container images
@@ -25,17 +33,40 @@ $ sudo podman login registry.redhat.io
 Username: <username>
 Password: <password>
 ----
+If you don't have an existing credential to login to registry.redhat.io then you can generate them by following the below steps:
+.. Visit this link https://access.redhat.com/terms-based-registry/
+.. Login with your Red Hat account
+.. Click on *New Service Account* button
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/new-service-account.png[link=images/new-service-account.png,window=_blank]
+^| Figure 3.1 - Click on New Service Account button
+^| [small]#Click on image to view large size#
+|===
 
-. Install firewall and allow necessary ports to it
+.. Enter any username and description and click on the *Create* button
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/create-new-registry-svc-account.png[link=images/create-new-registry-svc-account.png,window=_blank]
+^| Figure 3.2 - Enter name and description
+^| [small]#Click on image to view large size#
+|===
+
+.. Copy the username and password. You can now use it to login to registry.redhat.io
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/token-information.png[link=images/token-information.png,window=_blank]
+^| Figure 3.3 - View your credentials
+^| [small]#Click on image to view large size#
+|===
+
+
+. Create a new podman network. You'll create your containers within this dns enabled network.
 +
 [source,sh]
 ----
-$ sudo yum install -y firewalld
-$ sudo systemctl start firewalld
-$ sudo firewall-cmd --permanent --add-port=80/tcp
-$ sudo firewall-cmd --permanent --add-port=443/tcp
-$ sudo firewall-cmd --permanent --add-port=5432/tcp
-$ sudo firewall-cmd --permanent --add-port=5433/tcp
-$ sudo firewall-cmd --permanent --add-port=6379/tcp
-$ sudo firewall-cmd --reload
+sudo podman network create test
 ----

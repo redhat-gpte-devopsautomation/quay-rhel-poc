@@ -6,16 +6,16 @@ The database is used by Red Hat Quay as its primary metadata storage. Note that 
 +
 [source,sh]
 ----
-$ sudo mkdir -p /var/lib/pgsql/postgres-quay
-$ QUAY=/var/lib/pgsql/
-$ sudo setfacl -m u:26:-wx $QUAY/postgres-quay
+sudo mkdir -p /var/lib/pgsql/postgres-quay
+QUAY=/var/lib/pgsql/
+sudo setfacl -m u:26:-wx $QUAY/postgres-quay
 ----
 
 . Use podman run to start the Postgres container, specifying the username, password, database name and port, together with the volume definition for database data:
 +
 [source,sh]
 ----
-$ sudo podman run -d --rm --name postgresql-quay \
+$ sudo podman run -d --name postgresql-quay --net test\
   -e POSTGRESQL_USER=quayuser \
   -e POSTGRESQL_PASSWORD=quaypass \
   -e POSTGRESQL_DATABASE=quay \

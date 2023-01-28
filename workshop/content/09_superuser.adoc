@@ -9,35 +9,23 @@ A superuser is a Quay user account that has extended privileges, including the a
     * Create globally visible user messages
 
 === Add the superuser
-. To add super user, stop the quay registry container
-+
-[source,sh]
-----
-$ sudo podman rm -f quay
-----
-
-. Edit the config.yaml file with the below
+. Edit the config.yaml file to include the SUPER_USERS directive. Currently we have the user quayadmin created, include it in the list as shown below.
 +
 [source,sh]
 ----
 $ cd $QUAY/config
 $ vim config.yaml (add the superusers array only)
-SERVER_HOSTNAME: quay-server.example.com
+SERVER_HOSTNAME: quay.example.com
 SETUP_COMPLETE: true
 SUPER_USERS:
   - quayadmin
 ----
 
-. Restart the Quay registry:
+. Restart the Quay registry. It might take about a minute for the application to be available after container restarts:
 +
 [source,sh]
 ----
-$ sudo podman rm -f quay
-$ sudo podman run -d --rm -p 80:8080 -p 443:8443 \
---name=quay \
--v $QUAY/config:/conf/stack:Z \
--v $QUAY/storage:/datastorage:Z \
-registry.redhat.io/quay/quay-rhel8:v3.7.8
+$ sudo podman restart quay
 ----
 
 . Access the Super User Admin Panel by clicking on the current user’s name or avatar in the top right-hand corner of the UI. If the user has been added as a superuser, an extra item is presented in the drop-down list called Super User Admin Panel.
@@ -50,18 +38,52 @@ registry.redhat.io/quay/quay-rhel8:v3.7.8
 ^| [small]#Click on image to view large size#
 |===
 
-=== Creating a globally visible user message
+=== Restricting user creation
 
-. Using the Superuser Admin Panel, you can create Normal, Warning, or Error messages for your organization.
-. Click your user name in the top right-hand corner of the UI. Select `Super User Admin Panel`.
-. On the Red Hat Quay Management page, click `Globally visible user messages` on the left hand pane.
-. Click `Create Message` to show a drop-down menu containing Normal, Warning, and Error message types
-. Enter a message by selecting `Click to set message`, then click `Create Message`.
+. Recall, that when you login to the Red Hat Quay landing page, there's a `Create Account` option. You used this option earlier to create the `quayadmin` user.
 +
 [cols="1a",grid=none,width=80%]
 |===
-^| image::images/superusertestmessage.png[link=images/superusertestmessage.png,window=_blank]
-^| Figure 9.2 - Creating a global message
+^| image::images/create-account-option.png[link=images/create-account-option.png,window=_blank]
+^| Figure 9.2 - Create account option on home page
 ^| [small]#Click on image to view large size#
 |===
-. Messages can be deleted by clicking Options and then Delete Message.
+. If you don't disable this then anyone can sign up to the registry if they just know the URL of the registry.
+
+. Disable this user creation method by setting the FEATURE_USER_CREATION flag to `false`. Edit the config file only to change this one line
++
+[source,sh]
+----
+$ cd $QUAY/config
+$ vim config.yaml 
+FEATURE_USER_CREATION: false
+----
+This field was previously set to true, change it to false.
+
+. Restart the Quay registry:
++
+[source,sh]
+----
+$ sudo podman restart quay
+----
+. Launch the web page again and notice that the `Create Account` option is not visible anymore.
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/no-create-account.png[link=images/no-create-account.png,window=_blank]
+^| Figure 9.3 - Disabled Create Account
+^| [small]#Click on image to view large size#
+|===
+. Now create a new user from the `Super User Admin Panel`. Login as quayadmin, password is password
+. Click your user name in the top right-hand corner of the UI. Select `Super User Admin Panel`.
+. Click the `Create User` button and enter the username,email. Click `Create User` button
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/create-user.png[link=images/create-user.png,window=_blank]
+^| Figure 9.4 - Create new user from Super User Admin Panel
+^| [small]#Click on image to view large size#
+|===
+. Take a note of the temporary password.
+. Click on the right top drop down on the username and select `Sign out all sessions`
+. Now login with the newly created user.

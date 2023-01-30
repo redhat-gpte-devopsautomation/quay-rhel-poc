@@ -6,26 +6,26 @@
 +
 [source,sh]
 ----
-$ scp ~/Downloads/quay-config.tar.gz ec2-user@quay.<guid>.dynamic.opentlc.com:/tmp
+$ scp ~/Downloads/quay-config.tar.gz ec2-user@quay.<guid>.sandboxXXX.opentlc.com:/tmp
 ----
 +
 *Run the below commands on your virtual machine:*
 +
 [source,sh]
 ----
-$ sudo mkdir $QUAY/config
-$ cd $QUAY/config
-$ sudo cp /tmp/quay-config.tar.gz .
-$ sudo tar xvf quay-config.tar.gz
-$ sudo rm -f quay-config.tar.gz
+sudo mkdir $QUAY/config
+cd $QUAY/config
+sudo cp /tmp/quay-config.tar.gz .
+sudo tar xvf quay-config.tar.gz
+sudo rm -f quay-config.tar.gz
 ----
 
 . For this exercise, use the local file system to store registry images
 +
 [source,sh]
 ----
-$ sudo mkdir $QUAY/storage
-$ sudo setfacl -m u:1001:-wx $QUAY/storage
+sudo mkdir $QUAY/storage
+sudo setfacl -m u:1001:-wx $QUAY/storage
 ----
 
 . Deploy the Red Hat Quay registry
@@ -62,11 +62,11 @@ f1a9ea3e04ec  registry.redhat.io/quay/quay-rhel8:v3.7.8  registry        8 secon
 ^| [small]#Click on image to view large size#
 |===
 
-. Select Create Account 
+. Click on the *Create Account* button to create a user
 * Username: quayadmin
 * Email: quay@example.com
 * Password: password
-* Select Create account to create the account
+* Click on *Create account* button
 +
 [cols="1a",grid=none,width=80%]
 |===

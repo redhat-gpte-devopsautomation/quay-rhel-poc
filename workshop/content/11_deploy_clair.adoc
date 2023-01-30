@@ -8,8 +8,8 @@ Clair is an application for parsing image contents and reporting vulnerabilities
 +
 [source,sh]
 ----
-$ sudo mkdir -p $QUAY/postgres-clairv4
-$ sudo setfacl -m u:26:-wx $QUAY/postgres-clairv4
+sudo mkdir -p $QUAY/postgres-clairv4
+sudo setfacl -m u:26:-wx $QUAY/postgres-clairv4
 ----
 * Run the database
 +
@@ -64,19 +64,19 @@ $ sudo podman run --rm -it --name quay_config --net test\
 
 NOTE:  The PSK is a randomly generated base64 converted shared secret to prevent unauthenticated calls against the clair API
 
-* Validate the settings and download the configuration.
+* Click on *Validate Configuration Changes* button and download the configuration by clicking on the *Download* button
 
-. Copy this config to the Quay VM to use the updated config with the Clair settings
+** Copy this config to the Quay VM to use the updated config with the Clair settings
 
 *Perform the below steps on your laptop*
 
-. Copy the config file to the Quay machine
+* Copy the config file to the Quay machine
 +
 [source,sh]
 ----
 [nroy@nealwork quay]$ mv ~/Downloads/quay-config\ \(1\).tar.gz ~/Downloads/quay-config-clair.tar.gz
 
-[nroy@nealwork quay]$ scp /home/nroy/Downloads/quay-config-clair.tar.gz  ec2-user@quay.<guid>.dynamic.opentlc.com:/tmp/
+[nroy@nealwork quay]$ scp /home/nroy/Downloads/quay-config-clair.tar.gz  ec2-user@quay.<guid>.sandboxXXX.opentlc.com:/tmp/
 ----
 
 *Perform the below steps on your VM*
@@ -98,17 +98,14 @@ $ cd $QUAY/config
 
 $ sudo cp /tmp/quay-config-clair.tar.gz .
 
-$ sudo tar xvf quay-config-ssl.tar.gz 
+$ sudo tar xvf quay-config-clair.tar.gz 
 extra_ca_certs/
 config.yaml
 ssl.cert
 ssl.key
 
-$ sudo rm -f quay-config-ssl.tar.gz 
+$ sudo rm -f quay-config-clair.tar.gz 
 ----
-
-. Kill the quay config container which was running in configuration mode
-
 
 === Clair configuration 
 
@@ -151,7 +148,7 @@ trace:
 metrics:
   name: "prometheus"
 ----
-
++
 NOTE: Make sure the value of the `key:` parameter matches the generated PSK value
 
 . Run Clair
@@ -172,6 +169,7 @@ sudo podman start quay
 +
 [source,sh]
 ----
+$ podman logout quay.example.com
 $ podman login quay.example.com
 Username: quayadmin
 Password:
@@ -185,6 +183,8 @@ $ podman pull ubuntu:20.04
 $ podman tag docker.io/library/ubuntu:20.04 quay.example.com/quayadmin/ubuntu:20.04
 $ podman push quay.example.com/quayadmin/ubuntu:20.04
 ----
+. Visit https://quay.example.com and Click on the ubuntu repo to navigate inside it. Click on the Tags option on the left side.
+
 . Scanning results as seen in UI, notice the security scan column. It takes upto 15 mins for Clair to download all relevant databases, before the ubuntu-based image will show any vulnerabilities. 
 +
 [cols="1a",grid=none,width=80%]
@@ -193,8 +193,8 @@ $ podman push quay.example.com/quayadmin/ubuntu:20.04
 ^| Figure 11.3 - Security Scan column shows vulnerabilities
 ^| [small]#Click on image to view large size#
 |===
-
-NOTE: During your wait time, you can tail the clairv4 container logs and wait for "ubuntu-focal-updater" to appear. All the RHEL databases are downloaded first and Ubuntu comes last, this is a one time operation.
++
+NOTE: During your wait time, you can tail the clairv4 container logs from the cli(podman logs -f clairv4) and wait for "ubuntu-focal-updater" to appear. All the RHEL databases are downloaded first and Ubuntu comes last, this is a one time operation.
 
 . On selecting colored option("6 medium" in our case), you see the detailed view of the vulnerabilities of the image
 +

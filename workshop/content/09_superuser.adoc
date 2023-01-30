@@ -40,7 +40,7 @@ $ sudo podman restart quay
 
 === Restricting user creation
 
-. Recall, that when you login to the Red Hat Quay landing page, there's a `Create Account` option. You used this option earlier to create the `quayadmin` user.
+. Recall that when you login to the Red Hat Quay landing page, there's a `Create Account` option. You used this option earlier to create the `quayadmin` user.
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -74,7 +74,7 @@ $ sudo podman restart quay
 ^| Figure 9.3 - Disabled Create Account
 ^| [small]#Click on image to view large size#
 |===
-. Now create a new user from the `Super User Admin Panel`. Login as quayadmin, password is password
+. Now create a new user from the `Super User Admin Panel`. Login as `quayadmin` / `password`
 . Click your user name in the top right-hand corner of the UI. Select `Super User Admin Panel`.
 . Click the `Create User` button and enter the username,email. Click `Create User` button
 +
@@ -87,3 +87,4 @@ $ sudo podman restart quay
 . Take a note of the temporary password.
 . Click on the right top drop down on the username and select `Sign out all sessions`
 . Now login with the newly created user.
+. Once you have successfully tested the login, you can logout and login as the quayadmin user.

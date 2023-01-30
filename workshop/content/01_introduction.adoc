@@ -11,10 +11,10 @@ This lab describes how to deploy Red Hat Quay for proof-of-concept (non-producti
 
 In this hands on lab you will:
 
-* Configure the RHEL server with prerequisites
+* Configure the RHEL server with the prerequisites
 * Configure the postgres database
 * Configuring Redis
-* Setup the required configuration
+* Setup the required configuration for Red Hat Quay
 * Deploy Red Hat Quay
 * Deploy Red Hat Quay with SSL certificates
 * Setup Quay Superuser

@@ -1,13 +1,11 @@
 
 == Configure RHEL server
 
-Let's finish off the prerequisites for this lab.
-
 . Login to the provisioned VM using the credentials you received in the email
 +
 [source,sh]
 ----
-ssh ec2-user@quay.<guid>.dynamic.opentlc.com
+ssh ec2-user@quay.<guid>.sandboxXXXX.opentlc.com
 ----
 
 . Install container-tools module
@@ -15,7 +13,6 @@ ssh ec2-user@quay.<guid>.dynamic.opentlc.com
 [source,sh]
 ----
 sudo dnf module install -y container-tools
-sudo dnf install -y podman-plugins
 ----
 
 . Install the podman-plugins package
@@ -29,7 +26,7 @@ sudo dnf install -y podman-plugins
 +
 [source,sh]
 ----
-$ sudo podman login registry.redhat.io
+sudo podman login registry.redhat.io
 Username: <username>
 Password: <password>
 ----

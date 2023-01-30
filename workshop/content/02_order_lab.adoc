@@ -34,6 +34,6 @@ In this section, you will order the lab for the upcoming exercises. You have alr
 
 . Login to https://demo.redhat.com and navigate to catalog and search for *{catalog_name}*. Select it, you will see a sidebar with a order button, select the order button.
 
-. After provisioning is complete you'll get an email with the login details. The subject of the email would be: *service {catalog_name} <guid> is ready*. 
+. After provisioning is complete you'll get an email with the login details. The subject of the email would be: *RHDP service {catalog_name} <guid> is ready*. 
 
 . You are now ready to follow through the exercises and deploy Red Hat Quay on RHEL.

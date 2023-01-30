@@ -2,14 +2,8 @@
 
 Before running the Red Hat Quay service, you need to generate a configuration file that has details of all the components, including registry settings, and database and Redis connection parameters. 
 
-. To generate a configuration file, run the Quay container in config mode, specifying a password, for example, the string `secret`.
-+
-[source,sh]
-----
-$ sudo podman run --rm -it --name quay_config --net test -p 80:8080 -p 443:8443 registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
-----
 
-. Make sure you add the entry for `quay.example.com` in your `/etc/hosts` file of the local machine(your laptop) and also the virtual machine on which you will run quay.
+. Make sure you add the entry for `quay.example.com` in your `/etc/hosts` file of the local machine(your laptop) and also in your provisioned virtual machine on which you will run quay.
 +
 [source,sh]
 ----
@@ -25,7 +19,14 @@ $ sudo podman run --rm -it --name quay_config --net test -p 80:8080 -p 443:8443 
 ----
 Where `52.118.31.6` is the public IP of the VM which was provisioned, *for you this IP will be different*. You have received your public IP in the separate email when you provisioned your lab environment. Use the same IP here.
 
-. Use your laptop’s browser to access the user interface for the configuration tool at http://quay.example.com . Please note that TLS is possible and that would be covered in the next few exercises in detail.
+. To generate a configuration file, run the Quay container in config mode, specifying a password, for example, the string `secret`.
++
+[source,sh]
+----
+$ sudo podman run --rm -it --name quay_config --net test -p 80:8080 -p 443:8443 registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
+----
+
+. Use your laptop’s browser to access the user interface for the configuration tool at http://quay.example.com . Please note that TLS is possible and that would be covered in detail in the next few exercises.
 
 . Log in with the username `quayconfig` and password `secret`, or whatever values were specified in the podman run command above.
 +

@@ -123,8 +123,8 @@ $ sudo podman rm -f quay
 $ sudo podman run --rm -it --name quay_config --net test -p 80:8080 -p 443:8443 -v $QUAY/config:/conf/stack:Z registry.redhat.io/quay/quay-rhel8:v3.7.8 config secret
 ----
 
-. Visit http://quay.example.com
-Login with username quayconfig and password secret
+. Visit http://quay.example.com .
+Login with username `quayconfig` and password `secret`
 . In the Server Configuration section, select `Red Hat Quay handles TLS` for TLS. Upload the certificate file and private key file created earlier, ensuring that the Server Hostname matches the value used when creating the certs. 
 +
 [cols="1a",grid=none,width=80%]
@@ -190,7 +190,7 @@ $ sudo rm -f quay-config-ssl.tar.gz
 [source,sh]
 ----
 $ sudo podman run -d --stop-timeout=30 -p 80:8080 -p 443:8443 \
---name=quay --net test\
+--name=quay --net test \
 -v $QUAY/config:/conf/stack:Z \
 -v $QUAY/storage:/datastorage:Z \
 registry.redhat.io/quay/quay-rhel8:v3.7.8

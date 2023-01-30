@@ -27,7 +27,11 @@ $ sudo cp /tmp/rootCA.pem /root/ca.crt
 $ sudo podman run -d --name mirroring-worker --net test -v $QUAY/config:/conf/stack:Z   -v /root/ca.crt:/etc/pki/ca-trust/source/anchors/ca.crt:Z   registry.redhat.io/quay/quay-rhel8:v3.7.8 repomirror
 ----
 
-. Create a new repo in the Red Hat Quay user interface.
+. Login to the Red Hat Quay UI as the quayadmin user if you are not already logged in.
+
+. Click on the *Create New Repository* button to create a new repo in the Red Hat Quay user interface.
+.. Enter repo name: *quay-rhel8*
+.. Click on *Create Private Repository* button
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -35,7 +39,7 @@ $ sudo podman run -d --name mirroring-worker --net test -v $QUAY/config:/conf/st
 ^| Figure 10.1 - Create a new repo
 ^| [small]#Click on image to view large size#
 |===
-. In the Settings tab, set the Repository State to Mirror:
+. In the Settings tab, set the Repository State to Mirror from the dropdown as shown in the screenshot. 
 +
 [cols="1a",grid=none,width=80%]
 |===
@@ -43,12 +47,14 @@ $ sudo podman run -d --name mirroring-worker --net test -v $QUAY/config:/conf/st
 ^| Figure 10.2 - Set repository state to mirror in settings tab
 ^| [small]#Click on image to view large size#
 |===
+NOTE: If you don't see this section then refresh the webpage once. If you still don't see it, verify that your mirroring-worker container is running
+
 . In the Mirror tab, enter the details for connecting to the external registry, along with the tags, scheduling and access information
 
 * Registry Location: The external repository you want to mirror, for example, *registry.redhat.io/quay/quay-rhel8*
 * Tags: *v3.7.8,v3.7.?* 
 +
-This field is required. You may enter a comma-separated list of individual tags or tag patterns. (See Tag Patterns section for details.)
+This field is required. You may enter a comma-separated list of individual tags or tag patterns. 
 +
 [NOTE]
 ====
@@ -63,7 +69,7 @@ At least one explicit tag, without pattern matching, must exist in the list of t
 * Robot User: Create a new robot account or choose an existing robot account to do the mirroring.
 ** To create a robot account click on the dropdown of the `Robot User` field and select `Create robot account`
 ** Enter a name for your robot account and select the `Create robot account` button
-* Username: The username for accessing the external registry holding the repository you are mirroring. This will be the same username by which you authenticate against registry.redhat.io (for this example). If you didn't have this you created a username at the beginning of this course by visiting https://access.redhat.com/terms-based-registry/
+* Username: The username for accessing the external registry holding the repository you are mirroring. This will be the same username by which you authenticated against registry.redhat.io (for this example). If you didn't have this username created at the beginning of this course, you can create it by visiting https://access.redhat.com/terms-based-registry/
 * Password: The password associated with the Username. Note that the password cannot include characters that require an escape character (\).
 +
 [cols="1a",grid=none,width=80%]
@@ -73,21 +79,30 @@ At least one explicit tag, without pattern matching, must exist in the list of t
 ^| [small]#Click on image to view large size#
 |===
 
-. Press the return key
-. Synchronize now To perform an immediate mirroring operation, press the Sync Now button on the repository’s Mirroring tab. The logs are available on the Usage Logs tab:
+. Press the return key. The sync now button should be enabled now.
+. Synchronize now to perform an immediate mirroring operation, click on the *Sync Now* button on the repository’s Mirroring tab. 
++
+[cols="1a",grid=none,width=80%]
+|===
+^| image::images/syncnow.png[link=images/syncnow.png,window=_blank]
+^| Figure 10.4 - Sync Now button
+^| [small]#Click on image to view large size#
+|===
+
+. View the logs are available on the Usage Logs tab:
 +
 [cols="1a",grid=none,width=80%]
 |===
 ^| image::images/repomirrorsyncsuccess.png[link=images/repomirrorsyncsuccess.png,window=_blank]
-^| Figure 10.4 - Mirroring in progress
+^| Figure 10.5 - Mirroring in progress
 ^| [small]#Click on image to view large size#
 |===
 
-. When the mirroring is complete, the images will appear in the Tags tab. For this to show, refresh the webpage from the browser
+. Within few minutes when the mirroring is complete, the images will appear in the Tags tab. For this to show, refresh the webpage from the browser
 +
 [cols="1a",grid=none,width=80%]
 |===
 ^| image::images/repomirrorimages.png[link=images/repomirrorimages.png,window=_blank]
-^| Figure 10.5 - Mirrored images appear in Tags tab
+^| Figure 10.6 - Mirrored images appear in Tags tab
 ^| [small]#Click on image to view large size#
 |===

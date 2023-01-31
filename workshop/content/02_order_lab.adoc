@@ -26,7 +26,7 @@
 :source-linenums-option:        
 :markup-in-source: verbatim,attributes,quotes
 :show_solution: true
-:catalog_name: Red Hat Quay - Deploy Red Hat Quay on RHEL for poc
+:catalog_name: Deploy Red Hat Quay on RHEL for poc
 
 == Provision the lab
 

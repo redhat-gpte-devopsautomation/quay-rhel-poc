@@ -1,6 +1,6 @@
 == Configure Redis
 
-Stores live builder logs and the Red Hat Quay tutorial. It is a key-value store. 
+Redis stores live builder logs and the Red Hat Quay tutorial. It is a key-value store. 
 Although Redis is only needed for the build logs, currently Redis cannot be disabled.
 
 . Run the Redis container
